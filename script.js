@@ -17,7 +17,9 @@ window.addEventListener('keydown', (e) => {
 		document.querySelector('.start').style.display = 'none';
 	}
 
-	move = e.key.toLowerCase();
+	if (['w', 's', 'a', 'd'].contains(e.key.toLowerCase())) {
+		move = e.key.toLowerCase();
+	}
 });
 
 class Snake {
