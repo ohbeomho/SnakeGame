@@ -1,11 +1,7 @@
 const canvas = document.getElementById('canvas');
-const width = 500;
-const height = 500;
-const app = new PIXI.Application({
-	width,
-	height,
-	view: canvas
-});
+const width = canvas.width;
+const height = canvas.height;
+const ctx = canvas.getContext('2d');
 
 const cellSize = 25;
 let move = 'up';
@@ -15,6 +11,7 @@ let score = 0;
 window.addEventListener('keydown', (e) => {
 	if (!running && score !== -1) {
 		running = true;
+		startGame();
 		document.querySelector('.start').style.display = 'none';
 		document.querySelector('.message').innerText = 'Score: 0';
 	}
@@ -51,8 +48,6 @@ class Snake {
 				y: y - 1
 			}
 		];
-		this.g = new PIXI.Graphics();
-		app.stage.addChild(this.g);
 	}
 
 	update() {
@@ -78,12 +73,9 @@ class Snake {
 	}
 
 	draw() {
-		this.g.clear();
-
 		for (let i = 0; i < this.list.length; i++) {
-			this.g.beginFill(i === 0 ? 0x90e0ff : 0xafefff);
-			this.g.drawRect(cellSize * this.list[i].x, cellSize * this.list[i].y, cellSize, cellSize);
-			this.g.endFill();
+			ctx.fillStyle = i === 0 ? 'rgb(144, 224, 255)' : 'rgb(175, 239, 255)';
+			ctx.fillRect(cellSize * this.list[i].x, cellSize * this.list[i].y, cellSize, cellSize);
 		}
 	}
 }
@@ -94,8 +86,6 @@ class Apple {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
-		this.g = new PIXI.Graphics();
-		app.stage.addChild(this.g);
 	}
 
 	update() {
@@ -114,10 +104,8 @@ class Apple {
 	}
 
 	draw() {
-		this.g.clear();
-		this.g.beginFill(0xff0000);
-		this.g.drawRect(this.x, this.y, cellSize, cellSize);
-		this.g.endFill();
+		ctx.fillStyle = 'rgb(255, 0, 0)';
+		ctx.fillRect(this.x, this.y, cellSize, cellSize);
 	}
 }
 
@@ -125,6 +113,7 @@ const apple = new Apple(
 	Math.floor(Math.random() * (width / cellSize)) * cellSize,
 	Math.floor(Math.random() * (width / cellSize)) * cellSize
 );
+let gameLoop = null;
 
 function gameOver() {
 	document.querySelector('.message').style.display = 'block';
@@ -136,21 +125,17 @@ function gameOver() {
 
 	running = false;
 	score = -1;
+	clearInterval(gameLoop);
 }
 
-const FPS = app.ticker.FPS;
-let delta = 0;
-app.ticker.add(() => {
-	if (running) {
-		delta += 6;
+function startGame() {
+	gameLoop = setInterval(() => {
+		ctx.clearRect(0, 0, width, height);
 
-		if (delta > FPS) {
-			snake.update();
-			snake.draw();
+		snake.update();
+		snake.draw();
 
-			apple.update();
-			apple.draw();
-			delta = 0;
-		}
-	}
-});
+		apple.update();
+		apple.draw();
+	}, 120);
+}
