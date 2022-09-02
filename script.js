@@ -8,17 +8,34 @@ const app = new PIXI.Application({
 });
 
 const cellSize = 25;
-let move = 'w';
+let move = 'up';
 let running = false;
+let score = 0;
 
 window.addEventListener('keydown', (e) => {
-	if (!running) {
+	if (!running && score !== -1) {
 		running = true;
 		document.querySelector('.start').style.display = 'none';
+		document.querySelector('.message').innerText = 'Score: 0';
 	}
 
-	if (['w', 's', 'a', 'd'].contains(e.key.toLowerCase())) {
-		move = e.key.toLowerCase();
+	switch (e.key.toLowerCase()) {
+		case 'w':
+		case 'arrowup':
+			move = 'up';
+			break;
+		case 's':
+		case 'arrowdown':
+			move = 'down';
+			break;
+		case 'a':
+		case 'arrowleft':
+			move = 'left';
+			break;
+		case 'd':
+		case 'arrowright':
+			move = 'right';
+			break;
 	}
 });
 
@@ -40,32 +57,24 @@ class Snake {
 
 	update() {
 		for (let i = this.list.length - 1; i > 0; i--) {
-			if (this.list[0].x === this.list[i].x && this.list[0].y === this.list[i].y) {
-				gameOver();
-			}
+			if (this.list[0].x === this.list[i].x && this.list[0].y === this.list[i].y) gameOver();
 
 			this.list[i].x = this.list[i - 1].x;
 			this.list[i].y = this.list[i - 1].y;
 		}
 
-		if (move === 'w') {
-			this.list[0].y -= 1;
-		} else if (move === 's') {
-			this.list[0].y += 1;
-		} else if (move === 'a') {
-			this.list[0].x -= 1;
-		} else if (move === 'd') {
-			this.list[0].x += 1;
-		}
+		if (move === 'up') this.list[0].y -= 1;
+		else if (move === 'down') this.list[0].y += 1;
+		else if (move === 'left') this.list[0].x -= 1;
+		else if (move === 'right') this.list[0].x += 1;
 
 		if (
 			this.list[0].x < 0 ||
 			this.list[0].x > width / cellSize ||
 			this.list[0].y < 0 ||
 			this.list[0].y > width / cellSize
-		) {
+		)
 			gameOver();
-		}
 	}
 
 	draw() {
@@ -98,6 +107,9 @@ class Apple {
 
 			this.x = Math.floor(Math.random() * (width / cellSize)) * cellSize;
 			this.y = Math.floor(Math.random() * (width / cellSize)) * cellSize;
+
+			score++;
+			document.querySelector('.message').innerText = 'Score: ' + score;
 		}
 	}
 
@@ -115,14 +127,15 @@ const apple = new Apple(
 );
 
 function gameOver() {
-	running = false;
-
 	document.querySelector('.message').style.display = 'block';
-	document.querySelector('.message').innerHTML = `GAME OVER!<br />Score: ${
-		snake.list.length - 1
-	}<br /><button onclick="location.reload()">Restart</button>`;
+	document.querySelector(
+		'.message'
+	).innerHTML = `<h3>GAME OVER!</h3>Score: <strong>${score}</strong><br /><button onclick="location.reload()">Restart</button>`;
 
 	canvas.style.display = 'none';
+
+	running = false;
+	score = -1;
 }
 
 const FPS = app.ticker.FPS;
