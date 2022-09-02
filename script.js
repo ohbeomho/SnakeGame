@@ -26,6 +26,10 @@ class Snake {
 			{
 				x,
 				y
+			},
+			{
+				x,
+				y: y - 1
 			}
 		];
 		this.g = new PIXI.Graphics();
@@ -34,7 +38,7 @@ class Snake {
 
 	update() {
 		for (let i = this.list.length - 1; i > 0; i--) {
-			if (this.list.length >= 3 && this.list[0].x === this.list[i].x && this.list[0].y === this.list[i].y) {
+			if (this.list[0].x === this.list[i].x && this.list[0].y === this.list[i].y) {
 				gameOver();
 			}
 
