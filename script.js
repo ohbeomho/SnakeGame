@@ -70,9 +70,9 @@ class Snake {
 
 		if (
 			this.list[0].x < 0 ||
-			this.list[0].x > width / cellSize ||
+			this.list[0].x >= width / cellSize ||
 			this.list[0].y < 0 ||
-			this.list[0].y > width / cellSize
+			this.list[0].y >= width / cellSize
 		)
 			gameOver();
 	}
