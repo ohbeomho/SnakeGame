@@ -5,12 +5,12 @@ const ctx = canvas.getContext('2d');
 const cellSize = 25;
 
 let move = 'up';
-let running = false;
+let started = false;
 let score = 0;
 
 window.addEventListener('keydown', (e) => {
-	if (!running && score !== -1) {
-		running = true;
+	if (!started) {
+		started = true;
 
 		document.querySelector('.start').style.display = 'none';
 		document.querySelector('.input').style.display = 'none';
@@ -119,14 +119,7 @@ const apple = new Apple(
 let gameLoop = null;
 
 function gameOver() {
-	running = false;
 	clearInterval(gameLoop);
-
-	document.querySelector('.message').style.display = 'none';
-	document.querySelector(
-		'.message'
-	).innerHTML = `<h3>GAME OVER!</h3>Score: <strong>${score}</strong><br /><button onclick="location.reload()">Restart</button>`;
-	score = -1;
 
 	setTimeout(() => {
 		ctx.clearRect(0, 0, width, height);
@@ -136,7 +129,10 @@ function gameOver() {
 		}
 	}, 800);
 	setTimeout(() => {
-		document.querySelector('.message').style.display = 'block';
+		document.querySelector(
+			'.message'
+		).innerHTML = `<h3>GAME OVER!</h3>Score: <strong>${score}</strong><br /><button onclick="location.reload()">Restart</button>`;
+
 		canvas.style.display = 'none';
 	}, 1900);
 }
