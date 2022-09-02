@@ -23,12 +23,23 @@
 				align-items: center;
 				height: 100vh;
 			}
+
+			.input {
+				margin: 10px 0px;
+			}
 		</style>
 	</head>
 	<body>
 		<h1>Snake Game</h1>
 		<h2 class="start">Press any key to start.</h2>
-		<canvas id="canvas" width="500" height="500" style="background-color: black;"></canvas>
+		<div class="input">
+			Difficulty <select id="difficulty">
+				<option value="easy">Easy</option>
+				<option value="normal" selected>Normal</option>
+				<option value="hard">Hard</option>
+			</select>
+		</div>
+		<canvas id="canvas" width="500" height="500" style="background-color: black"></canvas>
 		<div class="message"></div>
 		<div style="position: absolute; bottom: 0; right: 0; padding: 10px; font-size: 18px">
 			Source on <a href="https://github.com/OhBeomho/SnakeGame">Github</a>

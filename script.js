@@ -2,8 +2,8 @@ const canvas = document.getElementById('canvas');
 const width = canvas.width;
 const height = canvas.height;
 const ctx = canvas.getContext('2d');
-
 const cellSize = 25;
+
 let move = 'up';
 let running = false;
 let score = 0;
@@ -11,9 +11,12 @@ let score = 0;
 window.addEventListener('keydown', (e) => {
 	if (!running && score !== -1) {
 		running = true;
-		startGame();
+
 		document.querySelector('.start').style.display = 'none';
+		document.querySelector('.input').style.display = 'none';
 		document.querySelector('.message').innerText = 'Score: 0';
+
+		startGame(document.getElementById('difficulty').value);
 	}
 
 	switch (e.key.toLowerCase()) {
@@ -116,19 +119,31 @@ const apple = new Apple(
 let gameLoop = null;
 
 function gameOver() {
-	document.querySelector('.message').style.display = 'block';
+	running = false;
+	clearInterval(gameLoop);
+
+	document.querySelector('.message').style.display = 'none';
 	document.querySelector(
 		'.message'
 	).innerHTML = `<h3>GAME OVER!</h3>Score: <strong>${score}</strong><br /><button onclick="location.reload()">Restart</button>`;
-
-	canvas.style.display = 'none';
-
-	running = false;
 	score = -1;
-	clearInterval(gameLoop);
+
+	setTimeout(() => {
+		ctx.clearRect(0, 0, width, height);
+		for (let i = 0; i < snake.list.length; i++) {
+			ctx.fillStyle = 'rgb(180, 0, 0)';
+			ctx.fillRect(cellSize * snake.list[i].x, cellSize * snake.list[i].y, cellSize, cellSize);
+		}
+	}, 800);
+	setTimeout(() => {
+		document.querySelector('.message').style.display = 'block';
+		canvas.style.display = 'none';
+	}, 1900);
 }
 
-function startGame() {
+function startGame(difficulty) {
+	const delay = difficulty === 'easy' ? 200 : difficulty === 'normal' ? 120 : 50;
+
 	gameLoop = setInterval(() => {
 		ctx.clearRect(0, 0, width, height);
 
@@ -137,5 +152,5 @@ function startGame() {
 
 		apple.update();
 		apple.draw();
-	}, 120);
+	}, delay);
 }
