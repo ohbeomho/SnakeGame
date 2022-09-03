@@ -114,7 +114,8 @@ const apple = new Apple(
 	Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize,
 	Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize
 );
-let gameLoop = null;
+
+let gameLoop;
 
 function gameOver() {
 	clearInterval(gameLoop);
