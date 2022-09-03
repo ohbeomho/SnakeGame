@@ -1,6 +1,4 @@
 const canvas = document.getElementById('canvas');
-const width = canvas.width;
-const height = canvas.height;
 const ctx = canvas.getContext('2d');
 const cellSize = 25;
 
@@ -68,9 +66,9 @@ class Snake {
 
 		if (
 			this.list[0].x < 0 ||
-			this.list[0].x >= width / cellSize ||
+			this.list[0].x >= canvas.width / cellSize ||
 			this.list[0].y < 0 ||
-			this.list[0].y >= width / cellSize
+			this.list[0].y >= canvas.width / cellSize
 		)
 			gameOver();
 	}
@@ -98,8 +96,8 @@ class Apple {
 				y: snake.list[snake.list.length - 1].y
 			});
 
-			this.x = Math.floor(Math.random() * (width / cellSize)) * cellSize;
-			this.y = Math.floor(Math.random() * (width / cellSize)) * cellSize;
+			this.x = Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize;
+			this.y = Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize;
 
 			score++;
 			document.querySelector('.message').innerText = 'Score: ' + score;
@@ -113,8 +111,8 @@ class Apple {
 }
 
 const apple = new Apple(
-	Math.floor(Math.random() * (width / cellSize)) * cellSize,
-	Math.floor(Math.random() * (width / cellSize)) * cellSize
+	Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize,
+	Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize
 );
 let gameLoop = null;
 
@@ -122,7 +120,7 @@ function gameOver() {
 	clearInterval(gameLoop);
 
 	setTimeout(() => {
-		ctx.clearRect(0, 0, width, height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		for (let i = 0; i < snake.list.length; i++) {
 			ctx.fillStyle = 'rgb(180, 0, 0)';
 			ctx.fillRect(cellSize * snake.list[i].x, cellSize * snake.list[i].y, cellSize, cellSize);
@@ -141,7 +139,7 @@ function startGame(difficulty) {
 	const delay = difficulty === 'easy' ? 200 : difficulty === 'normal' ? 120 : 50;
 
 	gameLoop = setInterval(() => {
-		ctx.clearRect(0, 0, width, height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		snake.update();
 		snake.draw();
