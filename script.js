@@ -137,7 +137,7 @@ function gameOver() {
 }
 
 function startGame(difficulty) {
-	const delay = difficulty === 'easy' ? 200 : difficulty === 'normal' ? 120 : 50;
+	const fps = difficulty === 'easy' ? 10 : difficulty === 'normal' ? 15 : 30;
 
 	gameLoop = setInterval(() => {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -147,5 +147,5 @@ function startGame(difficulty) {
 
 		apple.update();
 		apple.draw();
-	}, delay);
+	}, 1000 / fps);
 }
