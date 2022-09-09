@@ -17,24 +17,12 @@ window.addEventListener('keydown', (e) => {
 		startGame(document.getElementById('difficulty').value);
 	}
 
-	switch (e.key.toLowerCase()) {
-		case 'w':
-		case 'arrowup':
-			move = 'up';
-			break;
-		case 's':
-		case 'arrowdown':
-			move = 'down';
-			break;
-		case 'a':
-		case 'arrowleft':
-			move = 'left';
-			break;
-		case 'd':
-		case 'arrowright':
-			move = 'right';
-			break;
-	}
+	let key = e.key.toLowerCase();
+
+	if ((key === 'arrowup' || key === 'w') && move !== 'down') move = 'up';
+	if ((key === 'arrowdown' || key === 's') && move !== 'up') move = 'down';
+	if ((key === 'arrowleft' || key === 'a') && move !== 'right') move = 'left';
+	if ((key === 'arrowright' || key === 'd') && move !== 'left') move = 'right';
 });
 
 class Snake {
@@ -52,25 +40,24 @@ class Snake {
 	}
 
 	update() {
+		const head = this.list[0];
+
 		for (let i = this.list.length - 1; i > 0; i--) {
-			if (this.list[0].x === this.list[i].x && this.list[0].y === this.list[i].y) gameOver();
+			if (head.x === this.list[i].x && head.y === this.list[i].y) gameOver();
 
 			this.list[i].x = this.list[i - 1].x;
 			this.list[i].y = this.list[i - 1].y;
 		}
 
-		if (move === 'up') this.list[0].y -= 1;
-		else if (move === 'down') this.list[0].y += 1;
-		else if (move === 'left') this.list[0].x -= 1;
-		else if (move === 'right') this.list[0].x += 1;
+		if (move === 'up') head.y -= 1;
+		else if (move === 'down') head.y += 1;
+		else if (move === 'left') head.x -= 1;
+		else if (move === 'right') head.x += 1;
 
-		if (
-			this.list[0].x < 0 ||
-			this.list[0].x >= canvas.width / cellSize ||
-			this.list[0].y < 0 ||
-			this.list[0].y >= canvas.width / cellSize
-		)
-			gameOver();
+		if (head.x >= canvas.width / cellSize) head.x = 0;
+		else if (head.x < 0) head.x = canvas.width / cellSize;
+		else if (head.y >= canvas.height / cellSize) head.y = 0;
+		else if (head.y < 0) head.y = canvas.height / cellSize;
 	}
 
 	draw() {
@@ -137,7 +124,7 @@ function gameOver() {
 }
 
 function startGame(difficulty) {
-	const fps = difficulty === 'easy' ? 10 : difficulty === 'normal' ? 15 : 30;
+	const fps = difficulty === 'easy' ? 10 : difficulty === 'normal' ? 15 : 25;
 
 	gameLoop = setInterval(() => {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
