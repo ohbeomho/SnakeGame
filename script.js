@@ -10,10 +10,7 @@ window.addEventListener('keydown', (e) => {
 	if (!started) {
 		started = true;
 
-		document.querySelector('.start').style.display = 'none';
 		document.querySelector('.input').style.display = 'none';
-		document.querySelector('.message').innerText = 'Score: 0';
-
 		startGame(document.getElementById('difficulty').value);
 	}
 
@@ -87,7 +84,6 @@ class Apple {
 			this.y = Math.floor(Math.random() * (canvas.width / cellSize)) * cellSize;
 
 			score++;
-			document.querySelector('.message').innerText = 'Score: ' + score;
 		}
 	}
 
@@ -115,16 +111,21 @@ function gameOver() {
 		}
 	}, 800);
 	setTimeout(() => {
-		document.querySelector(
-			'.message'
-		).innerHTML = `<h3>GAME OVER!</h3>Score: <strong>${score}</strong><br /><button onclick="location.reload()">Restart</button>`;
+		const restartButton = document.createElement('button');
+		restartButton.innerText = 'Restart';
+		restartButton.addEventListener('click', () => location.reload());
+		document.body.appendChild(restartButton);
 
-		canvas.style.display = 'none';
+		ctx.fillStyle = 'white';
+		ctx.font = '50px Segoe UI Black';
+		ctx.fillText('GAME OVER', 10, 60);
+		ctx.font = '20px Segoe UI Semibold';
+		ctx.fillText('Score: ' + score, 10, 120);
 	}, 1900);
 }
 
 function startGame(difficulty) {
-	const fps = difficulty === 'easy' ? 10 : difficulty === 'normal' ? 15 : 25;
+	const fps = difficulty === 'easy' ? 6 : difficulty === 'normal' ? 10 : 20;
 
 	gameLoop = setInterval(() => {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -134,5 +135,9 @@ function startGame(difficulty) {
 
 		apple.update();
 		apple.draw();
+
+		ctx.fillStyle = 'white';
+		ctx.font = '16px Segoe UI Light';
+		ctx.fillText('Score: ' + score, 10, 20);
 	}, 1000 / fps);
 }
